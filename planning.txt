@@ -1,0 +1,15 @@
+spellchecker - main function pass user arguements to functions
+
+fileFunc - store all the file retriving or outputting functions
+
+linkList - struct for storing dictionary words
+           struct for storing setting parameters
+           struct for storing user file words
+
+check - spell checking function
+        takes array of user word to be spell checked
+        takes length of user array
+        takes array of dictionary word
+        takes length of the dictionary array
+        action a pointer to a function that will be called for each misspelt word
+
