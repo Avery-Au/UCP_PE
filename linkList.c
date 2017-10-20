@@ -41,7 +41,7 @@ void linkListToArray(Node* head, char* array[], int arrayLength)
     {
         current = current->next;
         array[i] = (char*)malloc(MAX_WORD_SIZE*sizeof(char));
-        strcpy(array[i], *((Word*)(current->data))->wordString);
+        strncpy(array[i], *((Word*)(current->data))->wordString,30);
     }
 }
 

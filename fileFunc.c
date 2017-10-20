@@ -55,7 +55,7 @@ int readFile(Node* head, char* fileName)
                 /* make sure next node is ended correctly */
                 currentNode->next = NULL;
                 /* use strcpy to store the word into the node */
-                strcpy(*((Word*)(currentNode->data))->wordString, loadWord);
+                strncpy(*((Word*)(currentNode->data))->wordString, loadWord,30);
                 /* keep track of the link list size */
                 retFuncVal++;
             }
@@ -154,7 +154,7 @@ int readSetting(Node* head)
                 if(strcmp(name, "dictfile") == 0)
                 {
                     condition[0] = TRUE;
-                    strcpy(*((Setting*)(currentNode->data))->dictfile, value);
+                    strncpy(*((Setting*)(currentNode->data))->dictfile, value,30);
                     retFuncVal = 1;
                 }
                 else if(strcmp(name, "maxdifference") == 0)
@@ -167,7 +167,7 @@ int readSetting(Node* head)
                     {
                         printf("maxdifference cannot be equal or less than 0");
                         printf("autocorrect is set to no as default");
-                        strcpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE");
+                        strncpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
                     }
                     retFuncVal = 1;
                 }
@@ -176,18 +176,18 @@ int readSetting(Node* head)
                     condition[2] = TRUE;
                     if((strcmp(value, "yes") == 0) | (strcmp(value, "YES") == 0))
                     {
-                        strcpy(*((Setting*)(currentNode->data))->autocorrect, "TRUE");
+                        strncpy(*((Setting*)(currentNode->data))->autocorrect, "TRUE",30);
                         retFuncVal = 1;
                     }
                     else if((strcmp(value, "no") == 0) | (strcmp(value, "NO") == 0))
                     {
-                        strcpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE");
+                        strncpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
                     }
                     else
                     {
                         printf("Unknown value %s for autocorrect\n", value);
-                        printf('autocorrect is set to no as default');
-                        strcpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE");
+                        printf("autocorrect is set to no as default");
+                        strncpy(*((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
                         retFuncVal = 1;
                     }
 

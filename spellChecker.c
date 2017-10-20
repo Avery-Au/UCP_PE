@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
 
             /* dynamically allocate memory for the user file name */
             userFileName = (char*)malloc(30*sizeof(char));
-            strcpy(userFileName, argv[1]);
+            strncpy(userFileName, argv[1],30);
             dictionaryCount = readFile(dictionaryHead,
-                *((Setting*)(settingHead->data))->dictfile);
+                ((Setting*)(settingHead->data))->dictfile);
 
             if(dictionaryCount != -1)
             {

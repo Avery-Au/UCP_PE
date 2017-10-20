@@ -46,11 +46,11 @@ typedef struct Node
 
 
 
-Node* createEmpty(void);
+Node* createEmptyList(void);
 
-void freeLink(Node* head);
+void freeLinkList(Node* head);
 
-void linkToArray(Node* head, char* array[], int arrayLength);
+void linkListToArray(Node* head, char* array[], int arrayLength);
 
 void freeWordArray(char* array[], int arrayLength);
 
