@@ -35,14 +35,14 @@ int main(int argc, char* argv[])
         {
             /* initiate char arrays for storing dictionary words and user file
              * word, char array for storing user file name, int varaible for
-             * storing dictionary lsit size and user file list size */
+             * storing dictionary lsit size and user file  size */
             char** dictionaryArray = NULL;
             char** userFileArray = NULL;
             char* userFileName;
             int dictionaryCount;
             int userFileCount;
 
-            /* dynamically allocate memory for the list head node */
+            /* dynamically allocate memory for the  head node */
             Node* dictionaryHead = NULL;
             dictionaryHead = createEmptyList();
             Node* userFileHead = NULL;
@@ -52,13 +52,13 @@ int main(int argc, char* argv[])
             userFileName = (char*)malloc(30*sizeof(char));
             strcpy(userFileName, argv[1]);
             dictionaryCount = readFile(dictionaryHead,
-                settingHead->setting->dictfile);
+                *((Setting*)(settingHead->data))->dictfile);
 
             if(dictionaryCount != -1)
             {
                 #ifdef DEBUG
                 printf("Loaded %d words from %s\n", dictionaryCount,
-                    settingHead->setting->dictfile);
+                    ((Setting*)(settingHead->data))->dictfile);
                 #endif
 
                 dictionaryArray = (char**)malloc(dictionaryCount*
@@ -66,7 +66,7 @@ int main(int argc, char* argv[])
                 linkListToArray(dictionaryHead, dictionaryArray,
                     dictionaryCount);
 
-                /* free up memory for the link list as we are done with it */
+                /* free up memory for the link  as we are done with it */
                 freeLinkList(dictionaryHead);
                 dictionaryHead = NULL;
 
@@ -87,7 +87,7 @@ int main(int argc, char* argv[])
                     freeLinkList(userFileHead);
                     userFileHead = NULL;
 
-                    if(settingHead->setting->autocorrect == TRUE)
+                    if(*((Setting*)(settingHead->data))->autocorrect == TRUE)
                     {
                         action = &autoCorrect;
                     }
@@ -97,7 +97,7 @@ int main(int argc, char* argv[])
                     }
 
                     check(userFileArray, userFileCount, dictionaryArray,
-                        dictionaryCount, settingHead->setting->maxdifference,
+                        dictionaryCount, *((Setting*)(settingHead->data))->maxdifference,
                         action);
 
                     writeFile(userFileArray, userFileCount, userFileName);
@@ -116,8 +116,7 @@ int main(int argc, char* argv[])
             }
             else
             {
-                printf("Error occured during loading [%s]",
-                    settingHead->setting->dictfile);
+                printf("Error occured during loading dictionary file");
             }
             freeLinkList(settingHead);
             settingHead = NULL;

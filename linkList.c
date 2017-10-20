@@ -2,8 +2,8 @@
  * UNIX & C Programming (COMP1000) Assignment - Spell checking code.
  * Author: Avery Au (14740248)
  * Description: contain all the prototypes to handle link
- * list related functionality */
- */
+ * list related functionality
+ **/
 
 /* This function create an empty linked list and
  * dynamically allocated for the head node*/
@@ -22,7 +22,7 @@ Node* createEmptyList(void)
     }
     else
     {
-        head->next = NULL;
+        head-> next= NULL;
         return head;
     }
 }
@@ -41,7 +41,7 @@ void linkListToArray(Node* head, char* array[], int arrayLength)
     {
         current = current->next;
         array[i] = (char*)malloc(MAX_WORD_SIZE*sizeof(char));
-        strcpy(array[i], current->word->word);
+        strcpy(array[i], *((Word*)(current->data))->wordString);
     }
 }
 
