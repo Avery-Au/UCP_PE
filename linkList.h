@@ -29,7 +29,7 @@ typedef struct
     /* store dictionary file name string */
     char dictfile[MAX_WORD_SIZE];
     int* maxdifference;
-    int* autocorrect;
+    char autocorrect[MAX_WORD_SIZE];
 } Setting;
 
 /* struct for each Node which holds a word data struct
