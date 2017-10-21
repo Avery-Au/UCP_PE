@@ -26,33 +26,36 @@ int main(int argc, char* argv[])
     }
     else
     {
-
-        /* allocate memory to the head node for reading setting file */
-        Node* settingHead = NULL;
-        settingHead = createEmptyList();
+        /* dynamically allocate memory to head node for reading setting file */
+        Node* settingHead = (Node*)malloc(sizeof(Node));
 
         if(readSetting(settingHead) == 1)
         {
+            #ifdef DEBUG
+                printf("Display of reading setting file\n");
+                printf("dictionary = %s\n", ((Setting*)(settingHead->data))->dictfile);
+                printf("maxdifference = %d\n", ((Setting*)(settingHead->data))->maxdifference);
+                printf("autocorrect = %d\n", ((Setting*)(settingHead->data))->autocorrect);
+            #endif
             /* initiate char arrays for storing dictionary words and user file
              * word, char array for storing user file name, int varaible for
-             * storing dictionary lsit size and user file  size */
-            char** dictionaryArray = NULL;
-            char** userFileArray = NULL;
+             * storing dictionary lsit size and user file list size */
+            char** dictionaryArray;
+            char** userFileArray;
             char* userFileName;
             int dictionaryCount;
             int userFileCount;
 
-            /* dynamically allocate memory for the  head node */
-            Node* dictionaryHead = NULL;
-            dictionaryHead = createEmptyList();
-            Node* userFileHead = NULL;
-            userFileHead = createEmptyList();
+            /* dynamically allocate memory for the list head node */
+            Node* dictionaryHead = (Node*)malloc(sizeof(Node));
+            Node* userFileHead = (Node*)malloc(sizeof(Node));
 
             /* dynamically allocate memory for the user file name */
             userFileName = (char*)malloc(30*sizeof(char));
-            strncpy(userFileName, argv[1],30);
-            dictionaryCount = readFile(dictionaryHead,
-                ((Setting*)(settingHead->data))->dictfile);
+            /* copy user command into the variable for storing userfile name */
+            strcpy(userFileName, argv[1]);
+
+            dictionaryCount = readFile(dictionaryHead, ((Setting*)(settingHead->data))->dictfile);
 
             if(dictionaryCount != -1)
             {
@@ -66,7 +69,7 @@ int main(int argc, char* argv[])
                 linkListToArray(dictionaryHead, dictionaryArray,
                     dictionaryCount);
 
-                /* free up memory for the link  as we are done with it */
+                /* free up memory for the link list as we are done with it */
                 freeLinkList(dictionaryHead);
                 dictionaryHead = NULL;
 
@@ -87,7 +90,7 @@ int main(int argc, char* argv[])
                     freeLinkList(userFileHead);
                     userFileHead = NULL;
 
-                    if(*((Setting*)(settingHead->data))->autocorrect == TRUE)
+                    if(((Setting*)(settingHead->data))->autocorrect == TRUE)
                     {
                         action = &autoCorrect;
                     }
@@ -96,10 +99,16 @@ int main(int argc, char* argv[])
                         action = &userDecision;
                     }
 
+                    /* the action spell checking operation */
                     check(userFileArray, userFileCount, dictionaryArray,
-                        dictionaryCount, *((Setting*)(settingHead->data))->maxdifference,
+                        dictionaryCount, ((Setting*)(settingHead->data))->maxdifference,
                         action);
 
+                    /* as we now have the corrected word user array, we will
+                    required to clear the file before writing into it */
+                    remove(userFileName);
+
+                    /* writing the corrected word array into the userFile */
                     writeFile(userFileArray, userFileCount, userFileName);
 
                     freeWordArray(userFileArray, userFileCount);
@@ -116,7 +125,8 @@ int main(int argc, char* argv[])
             }
             else
             {
-                printf("Error occured during loading dictionary file");
+                printf("Error occured during loading [%s]",
+                    ((Setting*)(settingHead->data))->dictfile);
             }
             freeLinkList(settingHead);
             settingHead = NULL;

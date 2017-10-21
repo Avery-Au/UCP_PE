@@ -21,6 +21,7 @@
 #include "check.h"
 int readFile(Node* head, char* fileName);
 int writeFile(char* correctWordArray[], int arrayLength, char* fileName);
-int readSetting(Node* head);
+int readSetting(Node* settingHead);
+
 
 #endif

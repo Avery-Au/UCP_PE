@@ -55,7 +55,7 @@ int readFile(Node* head, char* fileName)
                 /* make sure next node is ended correctly */
                 currentNode->next = NULL;
                 /* use strcpy to store the word into the node */
-                strncpy(((Word*)(currentNode->data))->wordString, loadWord,30);
+                strcpy(((Word*)(currentNode->data))->wordString, loadWord);
                 /* keep track of the link list size */
                 retFuncVal++;
             }
@@ -116,27 +116,28 @@ int writeFile(char* correctWordArray[], int arrayLength, char* fileName)
  * function status
  **/
 
-int readSetting(Node* head)
+int readSetting(Node* settingHead)
 {
-    FILE* fptr = fopen(".spellconf","r");
-    int retFuncVal = 0, retfscanfVal = 0, i;
+    FILE* fptr = fopen("spellconf.txt","r");
+    int retFuncVal = 0, retCorrectVal = 0, i, retfscanfVal = 0;
     /* largest string name is 13(i.e.maxdifference) + NULL terminator = 14 */
     char name[14];
-    /* largest string value is 13(i.e. spellconf.txt) + NULL terminator = 14 */
-    char value[14];
+    /* largest string value is 29 + NULL terminator = 30 */
+    char value[30];
 
     /* assign each of the array element to condition of dictfile,
      * maxdifference and autocorrect respectively*/
     int condition[3];
 
-    /* initiate each condition as FALSE */
+    /* initiate each condition as FALSE
+     * [0] = dictfile
+     * [1] = maxdifference
+     * [2] = autocorrect
+     **/
     for(i = 0; i<3; i++)
     {
         condition[i] = FALSE;
     }
-    /* dynamically allocate memory for currentNode */
-    Node* currentNode = NULL;
-    currentNode = (Node*)malloc(sizeof(Node));
 
     if(fptr == NULL)
     {
@@ -147,88 +148,91 @@ int readSetting(Node* head)
     {
         do
         {
-            currentNode = head;
-            retfscanfVal = fscanf(fptr, "%s = %s", name, value);
+            retfscanfVal = fscanf(fptr, "%s = %29s", name, value);
             if(retfscanfVal != EOF)
             {
                 if(strcmp(name, "dictfile") == 0)
                 {
                     condition[0] = TRUE;
-                    strncpy(((Setting*)(currentNode->data))->dictfile, value,30);
+                    strcpy(((Setting*)(settingHead->data))->dictfile, value);
                     retFuncVal = 1;
                 }
                 else if(strcmp(name, "maxdifference") == 0)
                 {
                     condition[1] = TRUE;
+                    ((Setting*)(settingHead->data))->maxdifference = atoi(value);
 
-                    *((Setting*)(currentNode->data))->maxdifference = atoi(value);
-                    if((*((Setting*)(currentNode->data))->maxdifference == 0) |
-                      (*((Setting*)(currentNode->data))->maxdifference <= 0))
+                    if((((Setting*)(settingHead->data))->maxdifference == 0)|(((Setting*)(settingHead->data))->maxdifference < 0))
                     {
                         printf("maxdifference cannot be equal or less than 0");
                         printf("autocorrect is set to no as default");
-                        strncpy(((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
+                        retFuncVal = 1;
+                        condition[1] = FALSE;
                     }
-                    retFuncVal = 1;
+
                 }
                 else if(strcmp(name, "autocorrect") == 0)
                 {
-                    condition[2] = TRUE;
+
                     if((strcmp(value, "yes") == 0) | (strcmp(value, "YES") == 0))
                     {
-                        strncpy(((Setting*)(currentNode->data))->autocorrect, "TRUE",30);
-                        retFuncVal = 1;
+                        condition[2] = TRUE;
+                        retCorrectVal = TRUE;
                     }
                     else if((strcmp(value, "no") == 0) | (strcmp(value, "NO") == 0))
                     {
-                        strncpy(((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
+                        condition[2] = TRUE;
+                        retCorrectVal = FALSE;
                     }
                     else
                     {
                         printf("Unknown value %s for autocorrect\n", value);
                         printf("autocorrect is set to no as default");
-                        strncpy(((Setting*)(currentNode->data))->autocorrect, "FALSE",30);
-                        retFuncVal = 1;
+                        condition[2] = FALSE;
+                        retCorrectVal = FALSE;
                     }
-
+                    ((Setting*)(settingHead->data))->autocorrect = retCorrectVal;
+                    retFuncVal = 1;
                 }
                 else
                 {
                     printf("Unkown variable '%s'in spellconf.txt", name);
-                    retFuncVal = -1;
+                    condition[0] = FALSE;
+                    retFuncVal = 1;
                 }
             }
         }
         while(retfscanfVal != EOF);
-        fclose(fptr);
+    }
 
-        for(i = 0; i<3; i++)
+
+
+    fclose(fptr);
+
+    for(i = 0; i<3; i++)
+    {
+        if(condition[i] != TRUE)
         {
-            if(condition[i] != TRUE)
+            char defaultName[14];
+            switch(i)
             {
-                char defaultName[14];
-                switch(i)
-                {
-                    case 0:
-                        strcpy(defaultName, "dictfile");
-                        break;
-                    case 1:
-                        strcpy(defaultName, "maxdifference");
-                        break;
-                    case 2:
-                        strcpy(defaultName, "autocorrect");
-                        break;
-                    default:
-                        printf("unexpected entry");
-                        break;
-                }
-                retFuncVal = -1;
-                printf("Missing variable '%s' in spellconfig.\n", defaultName);
-
+                case 0:
+                    strcpy(defaultName, "dictfile");
+                    break;
+                case 1:
+                    strcpy(defaultName, "maxdifference");
+                    break;
+                case 2:
+                    strcpy(defaultName, "autocorrect");
+                    break;
+                default:
+                    printf("unexpected entry");
+                    break;
             }
+            retFuncVal = -1;
+            printf("Missing variable '%s' in spellconfig.\n", defaultName);
+
         }
-
-
     }
     return retFuncVal;
 }

@@ -1,0 +1,3 @@
+dictfile = dictionary.txt
+maxdifference = 1
+autocorrect = no

@@ -9,39 +9,22 @@
  * dynamically allocated for the head node*/
 #include "linkList.h"
 
-/* create an empty link list head and return the head of link list */
-Node* createEmptyList(void)
-{
-    /* allocate memory for head of the list */
-    Node* head = (Node*)malloc(sizeof(Node));
-
-    /* check if memory allocation was successful */
-    if(head == NULL)
-    {
-        printf("unable to allocate memory to head Node");
-    }
-    else
-    {
-        head-> next= NULL;
-        return head;
-    }
-}
 
 /* Converts a linked list into a dynamically allocated array.
  * the array char pointer is pre allocated with size of arrayLength
  * before passing into this function */
 void linkListToArray(Node* head, char* array[], int arrayLength)
 {
-    Node* current = head;
+    Node* currentNode = head;
     int i;
 
     /* loop through each of the elements jump to the next node in
      * the list and copy it into the arry */
     for(i = 0; i < arrayLength; i++)
     {
-        current = current->next;
+        currentNode = currentNode->next;
         array[i] = (char*)malloc(MAX_WORD_SIZE*sizeof(char));
-        strncpy(array[i], ((Word*)(current->data))->wordString,30);
+        strcpy(array[i], ((Word*)(currentNode->data))->wordString);
     }
 }
 

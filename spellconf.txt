@@ -1,3 +1,5 @@
 dictfile = dictionary.txt
-maxdifference = 1
-autocorrect = no
+dictfile = dictionary1.txt
+dictfile = dictionary2.txt
+dictfile = dictionary3.txt
+
