@@ -13,3 +13,5 @@ check - spell checking function
         takes length of the dictionary array
         action a pointer to a function that will be called for each misspelt word
 
+callback - handle action function to either user correct or manual correct
+

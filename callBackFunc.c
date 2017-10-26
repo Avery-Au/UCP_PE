@@ -19,33 +19,46 @@
  **/
 int userDecision(char* word, char* suggestion)
 {
-	  int retFuncVal = 0;
-		char userResponse;
-	  /* error check and make sure there is a suggestion available */
-	  if(suggestion != NULL)
-		{
-			  printf("Is the word '%s' meant to be '%s'? (y/n)", word, suggestion);
-
-			  scanf("%c", &userResponse);
-				switch(userResponse)
-				{
-						case 'y': case 'Y':
-								retFuncVal = TRUE;
-								break;
-						case 'n': case 'N':
-								retFuncVal = FALSE;
-								break;
-						default:
-								printf("Invalide input. (y/n) or (Y/N)");
-				}
-
-
-		}
-		else
-		{
-		    retFuncVal = -1;
-				printf("No suggestion available for correction");
-		}
+    int retFuncVal = 0, status = FALSE;
+    char userResponse;
+    /* error check and make sure there is a suggestion available */
+    if(suggestion != NULL)
+    {
+        printf("\nIs the word '%s' meant to be '%s'? (y/n)\n", word, suggestion);
+        while(status == FALSE)
+        {
+            char flush;
+            scanf("%c", &userResponse);
+            /* intended to flush out dangeling characters from input buffer
+             * using getchar to remove it all 
+	     * reference : https://stackoverflow.com/questions/7898215/how-to-clear-input-buffer-in-c
+	     **/
+            while((flush=getchar()) != '\n' && flush != EOF)
+            {
+            }
+            /* accept both upper and lowercase response from user */
+   	    switch(userResponse)
+	    {
+                case 'y': case 'Y':
+	            retFuncVal = TRUE;
+                    status = TRUE;
+	        break;
+	        case 'n': case 'N':
+	            retFuncVal = FALSE;
+                    status = TRUE;
+	        break;
+	        default:
+	            printf("Invalid input. (y/n) or (Y/N)\n");
+	    }
+        }    
+    }
+    else
+    {
+        /* if there is no suggestion available from the given library,
+	 * the program will prompt no suggestion available */
+        retFuncVal = -1;
+	printf("\nNo suggestion available for this word '%s'\n", word);
+    }
     return retFuncVal;
 }
 
@@ -61,14 +74,16 @@ int userDecision(char* word, char* suggestion)
 int autoCorrect(char* word, char* suggestion)
 {
     int retFuncVal = 0;
-		if(suggestion != NULL)
-		{
-		    retFuncVal = TRUE;
-		}
-		else
-		{
-		    retFuncVal = -1;
-				printf("No suggestion available for correction");
-		}
-		return retFuncVal;
+    /* as this is autocorrect, the program will check whether the word from user file exist in dictionary file
+     * if not it will prompt the no suggestion available message */
+    if(suggestion != NULL)
+    {
+        retFuncVal = TRUE;
+    }
+    else
+    {
+        retFuncVal = -1;
+	printf("\nNo suggestion available for this word '%s'\n", word);
+    }
+    return retFuncVal;
 }
